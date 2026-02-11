@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, Phone, Mail, MapPin, Globe, Shield, Terminal, BookOpen } from 'lucide-react';
+import { ArrowUpRight, Phone, Mail, MapPin, Globe, Shield, Terminal, BookOpen, Cpu } from 'lucide-react';
 import { Logo } from './ui/Logo';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -134,9 +134,21 @@ const Footer: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-4 text-slate-600">
-             <span className="text-[9px] uppercase font-bold tracking-[0.3em]">Built for Industrial Resilience</span>
-             <div className="w-1.5 h-1.5 rounded-full bg-industrial-primary animate-pulse" />
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+             <div className="flex items-center gap-4 text-slate-600">
+                <span className="text-[9px] uppercase font-bold tracking-[0.3em]">Built for Industrial Resilience</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-industrial-primary animate-pulse" />
+             </div>
+
+             <div className="hidden md:block w-[1px] h-3 bg-white/10" />
+
+             {/* Forgestack Badge */}
+             <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity cursor-default group">
+                <Cpu size={12} className="text-industrial-muted group-hover:text-industrial-accent transition-colors" />
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest group-hover:text-white transition-colors">
+                  Forgestack Labs LLP
+                </span>
+             </div>
           </div>
         </div>
       </div>
