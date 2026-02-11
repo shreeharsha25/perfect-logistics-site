@@ -1,7 +1,7 @@
 import React, { useRef, useLayoutEffect, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Shield, Zap, Settings, Activity, Cpu, Layers, HardHat, Globe } from 'lucide-react';
+import { Shield, Activity, HardHat, Globe } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,16 +39,17 @@ const InfrastructureScroll: React.FC = () => {
         }
       });
 
-      // Scale background text without blur to keep the industrial feel sharp
+      // Scale background text - ensure sharpness with backface-visibility via CSS
       tl.fromTo(bgTextRef.current, 
-        { scale: 0.9, opacity: 0.03 },
+        { scale: 0.9, opacity: 0.03, filter: "blur(0px)" },
         { scale: 1.15, opacity: 0.08, duration: 1.5, ease: "none" }
       );
 
-      // Expand horizontal axis
+      // Expand horizontal axis with Bloom Effect
       tl.to(lineRef.current, { 
         width: "95%", 
         backgroundColor: "#00A651",
+        boxShadow: "0 0 40px 5px rgba(0, 166, 81, 0.4)", // Added bloom
         duration: 0.8, 
         ease: "power2.inOut" 
       }, 0.5);
@@ -60,12 +61,12 @@ const InfrastructureScroll: React.FC = () => {
         borderWidth: "1px",
         borderColor: "#f1f5f9",
         borderRadius: "2px",
-        boxShadow: "0 50px 100px -30px rgba(0, 0, 0, 0.15)",
+        boxShadow: "0 50px 100px -30px rgba(0, 0, 0, 0.15)", // Remove bloom, add depth
         duration: 1.5,
         ease: "power4.inOut"
       });
 
-      // Reveal content - BLUR REMOVED for maximum legibility
+      // Reveal content
       tl.fromTo(contentRef.current,
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
@@ -81,8 +82,8 @@ const InfrastructureScroll: React.FC = () => {
     <div ref={componentRef} className="bg-industrial-bg relative z-20 overflow-hidden border-b border-industrial-border">
       <div ref={triggerRef} className="h-screen w-full flex flex-col items-center justify-center relative px-4 md:px-12">
         
-        <div ref={bgTextRef} className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0">
-           <span className="text-[35vw] md:text-[25vw] font-black text-slate-900 leading-none tracking-tighter uppercase font-mono italic opacity-10">
+        <div ref={bgTextRef} className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 will-change-transform">
+           <span className="text-[35vw] md:text-[25vw] font-black text-slate-900 leading-none tracking-tighter uppercase font-mono italic opacity-10 antialiased" style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
              MATRIX
            </span>
         </div>
