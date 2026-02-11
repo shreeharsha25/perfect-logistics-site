@@ -71,7 +71,7 @@ const ClientLogo = ({ client }: { client: Client }) => {
 
 const Clients: React.FC = () => {
   return (
-    <section className="py-20 bg-white border-b border-industrial-border overflow-hidden">
+    <section className="py-24 md:py-32 bg-white border-b border-industrial-border overflow-hidden">
       <div className="container mx-auto px-6 mb-12 text-center">
          <h3 className="text-industrial-muted text-xs font-bold tracking-[0.2em] uppercase mb-2">
             Trusted by Industry Leaders

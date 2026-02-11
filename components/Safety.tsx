@@ -106,7 +106,7 @@ const Safety: React.FC = () => {
   };
 
   return (
-    <section className="pt-24 md:pt-32 pb-16 md:pb-24 bg-industrial-bg min-h-screen font-sans overflow-hidden">
+    <section className="pt-12 md:pt-16 pb-16 md:pb-24 font-sans overflow-hidden">
       <div className="container mx-auto px-4 md:px-12">
         
         {/* --- Hero Section --- */}
@@ -249,14 +249,16 @@ const Safety: React.FC = () => {
                  </div>
               </div>
               
-              <button 
+              <motion.button 
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={generateHSEPolicy}
                   disabled={isGenerating}
                   className="w-full md:w-auto px-6 py-3 bg-industrial-text text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-industrial-primary transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 rounded-sm shadow-md"
                 >
                   {isGenerating ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
                   {isGenerating ? "Retrieving..." : "Download Secure PDF"}
-              </button>
+              </motion.button>
            </div>
            <p className="mt-4 text-[10px] text-industrial-muted uppercase tracking-widest flex items-center justify-center gap-2">
               <Lock size={10} /> Encrypted Digital Signature

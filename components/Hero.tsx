@@ -5,48 +5,21 @@ import { Link } from 'react-router-dom';
 
 const Hero: React.FC = () => {
   return (
-    <section className="relative min-h-screen w-full flex flex-col justify-center overflow-hidden border-b border-industrial-border bg-industrial-bg pt-24 md:pt-20">
+    <section className="relative min-h-screen w-full flex flex-col justify-center overflow-hidden border-b border-industrial-border pt-24 md:pt-20">
+      {/* Background is handled globally in App.tsx */}
       
-      {/* --- Animated Background Layer --- */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        
-        {/* 1. Moving Grid (Seamless Loop) */}
-        <motion.div 
-          className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:3rem_3rem] md:bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-[0.4]"
-          initial={{ backgroundPosition: "0px 0px" }}
-          animate={{ backgroundPosition: ["0px 0px", "64px 64px"] }}
-          transition={{ 
-            duration: 20, 
-            ease: "linear", 
-            repeat: Infinity 
-          }}
-        />
-
-        {/* 2. Abstract Technical Rings (Engineered Motion) - Optimized for Mobile */}
-        {/* Outer Dashed Ring */}
-        <motion.div
-          className="absolute -right-[40%] -top-[10%] md:-right-[10%] md:-top-[20%] w-[500px] h-[500px] md:w-[800px] md:h-[800px] rounded-full border border-industrial-border/60 border-dashed opacity-20 md:opacity-50"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 120, ease: "linear", repeat: Infinity }}
-        />
-        
-        {/* Middle Solid Ring */}
-        <motion.div
-          className="absolute -right-[30%] -top-[5%] md:-right-[5%] md:-top-[15%] w-[350px] h-[350px] md:w-[600px] md:h-[600px] rounded-full border border-industrial-primary/5 opacity-30 md:opacity-60"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 150, ease: "linear", repeat: Infinity }}
-        />
-
-        {/* Inner Accent Ring */}
-        <motion.div
-          className="absolute -right-[20%] top-[0%] md:-right-[0%] md:-top-[10%] w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full border border-industrial-accent/10 opacity-20 md:opacity-40"
-          animate={{ rotate: 360, scale: [1, 1.05, 1] }}
-          transition={{ 
-            rotate: { duration: 100, ease: "linear", repeat: Infinity },
-            scale: { duration: 10, ease: "easeInOut", repeat: Infinity }
-          }}
-        />
-      </div>
+      {/* Scanning Beam Effect */}
+      <motion.div
+        className="absolute left-0 w-full h-[2px] bg-industrial-primary/30 shadow-[0_0_20px_2px_rgba(0,166,81,0.2)] z-0 pointer-events-none"
+        initial={{ top: "0%" }}
+        animate={{ top: "100%" }}
+        transition={{ 
+          duration: 8, 
+          ease: "linear", 
+          repeat: Infinity,
+          repeatType: "loop"
+        }}
+      />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10 mt-0">
         <div className="max-w-5xl">
@@ -113,20 +86,24 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="flex flex-col sm:flex-row gap-4 sm:gap-5 w-full sm:w-auto"
           >
-            <Link 
-              to="/services" 
-              className="relative w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-gradient-to-b from-industrial-primary to-green-600 text-white font-bold text-xs md:text-sm uppercase tracking-widest rounded-sm border-t border-white/20 shadow-lg shadow-green-900/20 hover:shadow-xl hover:-translate-y-1 hover:to-green-500 transition-all duration-300 text-center group overflow-hidden"
-            >
-              <span className="relative z-10">View Capabilities</span>
-              <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            </Link>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link 
+                to="/services" 
+                className="relative block w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-gradient-to-b from-industrial-primary to-green-600 text-white font-bold text-xs md:text-sm uppercase tracking-widest rounded-sm border-t border-white/20 shadow-lg shadow-green-900/20 hover:shadow-xl hover:to-green-500 transition-all duration-300 text-center group overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center justify-center gap-2">View Capabilities</span>
+                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+              </Link>
+            </motion.div>
             
-            <Link 
-              to="/contact" 
-              className="relative w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-gradient-to-b from-white to-slate-50 text-industrial-text font-bold text-xs md:text-sm uppercase tracking-widest rounded-sm border border-slate-300 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-industrial-primary hover:text-industrial-primary transition-all duration-300 text-center"
-            >
-              Contact Projects
-            </Link>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link 
+                to="/contact" 
+                className="relative block w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-gradient-to-b from-white to-slate-50 text-industrial-text font-bold text-xs md:text-sm uppercase tracking-widest rounded-sm border border-slate-300 shadow-sm hover:shadow-lg hover:border-industrial-primary hover:text-industrial-primary transition-all duration-300 text-center"
+              >
+                Contact Projects
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </div>

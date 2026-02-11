@@ -158,6 +158,14 @@ const ServiceRequirementForm: React.FC = () => {
     </div>
   );
 
+  const MotionInput = motion.input;
+  const MotionSelect = motion.select;
+
+  const inputAnimation = {
+    whileFocus: { scale: 1.005, backgroundColor: "#ffffff", borderColor: "#00A651", boxShadow: "0 4px 15px rgba(0, 166, 81, 0.1)" },
+    transition: { duration: 0.2 }
+  };
+
   if (submissionData) {
     return (
       <motion.div 
@@ -189,12 +197,14 @@ const ServiceRequirementForm: React.FC = () => {
               <p className="font-mono text-industrial-text">{submissionData.timestamp}</p>
             </div>
           </div>
-          <button 
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => window.location.reload()} 
             className="w-full py-4 bg-industrial-text text-white font-bold uppercase tracking-widest hover:bg-industrial-primary transition-all text-sm rounded"
           >
             Submit Another Project
-          </button>
+          </motion.button>
         </div>
       </motion.div>
     );
@@ -219,16 +229,16 @@ const ServiceRequirementForm: React.FC = () => {
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <InputWrapper label="Company Name" required error={errors.companyName}>
-                <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded focus:border-industrial-primary outline-none" />
+                <MotionInput {...inputAnimation} type="text" name="companyName" value={formData.companyName} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded focus:border-industrial-primary outline-none" />
               </InputWrapper>
               <InputWrapper label="Org Type" required error={errors.orgType}>
-                <select name="orgType" value={formData.orgType} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded outline-none">
+                <MotionSelect {...inputAnimation} name="orgType" value={formData.orgType} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded outline-none">
                   <option value="">Select Category</option>
                   {ORGANIZATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
+                </MotionSelect>
               </InputWrapper>
               <InputWrapper label="GSTIN" error={errors.gstNumber}>
-                <input type="text" name="gstNumber" value={formData.gstNumber} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded uppercase" maxLength={15} />
+                <MotionInput {...inputAnimation} type="text" name="gstNumber" value={formData.gstNumber} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded uppercase" maxLength={15} />
               </InputWrapper>
             </div>
           </div>
@@ -241,18 +251,18 @@ const ServiceRequirementForm: React.FC = () => {
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <InputWrapper label="Full Name" required error={errors.contactName}>
-                <input type="text" name="contactName" value={formData.contactName} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
+                <MotionInput {...inputAnimation} type="text" name="contactName" value={formData.contactName} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
               </InputWrapper>
               <InputWrapper label="Designation">
-                <input type="text" name="designation" value={formData.designation} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
+                <MotionInput {...inputAnimation} type="text" name="designation" value={formData.designation} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
               </InputWrapper>
               <InputWrapper label="Official Email" required error={errors.email}>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
+                <MotionInput {...inputAnimation} type="email" name="email" value={formData.email} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
               </InputWrapper>
               <InputWrapper label="Mobile Number" required error={errors.mobile}>
                 <div className="flex">
-                  <span className="px-3 py-3 bg-slate-200 border border-r-0 border-slate-200 rounded-l text-xs font-bold">+91</span>
-                  <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-r flex-grow" />
+                  <span className="px-3 py-3 bg-slate-200 border border-r-0 border-slate-200 rounded-l text-xs font-bold flex items-center justify-center">+91</span>
+                  <MotionInput {...inputAnimation} type="tel" name="mobile" value={formData.mobile} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-r flex-grow" />
                 </div>
               </InputWrapper>
             </div>
@@ -266,13 +276,17 @@ const ServiceRequirementForm: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-4 bg-slate-50 border border-slate-200 rounded">
               {SERVICE_OPTIONS.map(service => (
-                <label key={service} className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-white group transition-all">
-                  <div className={`w-4 h-4 border rounded flex items-center justify-center ${formData.services.includes(service) ? 'bg-industrial-primary border-industrial-primary' : 'border-slate-300'}`}>
+                <motion.label 
+                  whileHover={{ backgroundColor: "#ffffff", x: 5 }}
+                  key={service} 
+                  className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-white group transition-colors"
+                >
+                  <div className={`w-4 h-4 border rounded flex items-center justify-center transition-colors ${formData.services.includes(service) ? 'bg-industrial-primary border-industrial-primary' : 'border-slate-300'}`}>
                     {formData.services.includes(service) && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
                   <input type="checkbox" className="hidden" checked={formData.services.includes(service)} onChange={() => handleCheckboxChange(service)} />
                   <span className="text-xs font-medium text-industrial-text group-hover:text-industrial-primary">{service}</span>
-                </label>
+                </motion.label>
               ))}
             </div>
             {errors.services && <span className="text-[10px] text-red-500 font-bold flex items-center gap-1"><AlertCircle size={10} /> {errors.services}</span>}
@@ -287,10 +301,10 @@ const ServiceRequirementForm: React.FC = () => {
                   <h3 className="font-bold text-industrial-text uppercase tracking-widest text-sm">Logistics</h3>
                 </div>
                 <InputWrapper label="Operational States" required error={errors.states}>
-                  <select onChange={handleStateSelect} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full">
+                  <MotionSelect {...inputAnimation} onChange={handleStateSelect} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full">
                     <option value="">+ Add State</option>
                     {INDIAN_STATES.map(s => <option key={s} value={s} disabled={formData.states.includes(s)}>{s}</option>)}
-                  </select>
+                  </MotionSelect>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {formData.states.map(s => (
                       <span key={s} className="px-2 py-1 bg-industrial-primary/10 text-industrial-primary text-[10px] font-bold uppercase rounded flex items-center gap-1 border border-industrial-primary/20">
@@ -300,7 +314,7 @@ const ServiceRequirementForm: React.FC = () => {
                   </div>
                 </InputWrapper>
                 <InputWrapper label="Site Specific Locations">
-                  <input type="text" name="locations" value={formData.locations} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full" placeholder="e.g. refineries, pump networks" />
+                  <MotionInput {...inputAnimation} type="text" name="locations" value={formData.locations} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full" placeholder="e.g. refineries, pump networks" />
                 </InputWrapper>
               </div>
 
@@ -310,14 +324,14 @@ const ServiceRequirementForm: React.FC = () => {
                   <h3 className="font-bold text-industrial-text uppercase tracking-widest text-sm">Timeline & Training</h3>
                 </div>
                 <InputWrapper label="Est. Project Start Date">
-                  <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} min={today} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full" />
+                  <MotionInput {...inputAnimation} type="date" name="startDate" value={formData.startDate} onChange={handleChange} min={today} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full" />
                 </InputWrapper>
                 <InputWrapper label="HSSE Site Training Required?">
-                  <select name="hsseRequired" value={formData.hsseRequired} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full">
+                  <MotionSelect {...inputAnimation} name="hsseRequired" value={formData.hsseRequired} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full">
                     <option value="">Select Option</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
-                  </select>
+                  </MotionSelect>
                 </InputWrapper>
               </div>
             </div>
@@ -336,14 +350,19 @@ const ServiceRequirementForm: React.FC = () => {
              </label>
           </div>
 
-          <button 
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             type="submit" 
             disabled={isSubmitting}
-            className="w-full py-5 bg-industrial-text text-white font-bold uppercase tracking-widest hover:bg-industrial-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full py-5 bg-industrial-text text-white font-bold uppercase tracking-widest hover:bg-industrial-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50 relative overflow-hidden group"
           >
-            {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <ClipboardCheck size={18} />}
-            {isSubmitting ? "Persisting Brief..." : "Initiate Technical Review"}
-          </button>
+            <span className="relative z-10 flex items-center gap-3">
+              {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <ClipboardCheck size={18} />}
+              {isSubmitting ? "Persisting Brief..." : "Initiate Technical Review"}
+            </span>
+            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+          </motion.button>
         </form>
       </div>
     </div>

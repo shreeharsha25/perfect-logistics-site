@@ -56,7 +56,7 @@ const WORKFLOW = [
 
 const Services: React.FC = () => {
   return (
-    <section className="pt-24 md:pt-32 pb-16 md:pb-24 bg-industrial-bg min-h-screen font-sans overflow-hidden">
+    <section className="pt-24 md:pt-32 pb-12 md:pb-16 font-sans overflow-hidden">
       <div className="container mx-auto px-4 md:px-12">
         
         {/* --- Header Section --- */}

@@ -20,6 +20,7 @@ import TermsOfService from './components/TermsOfService';
 import TechnicalManual from './components/TechnicalManual';
 import BackToTop from './components/ui/BackToTop';
 import ScrollProgress from './components/ui/ScrollProgress';
+import { AnimatedBackground } from './components/ui/AnimatedBackground';
 import { motion } from 'framer-motion';
 import { Building2, Phone, Mail, Globe, MapPin } from 'lucide-react';
 import { SectionHeading } from './components/ui/SectionHeading';
@@ -30,36 +31,42 @@ gsap.registerPlugin(ScrollTrigger);
 // --- Page Components ---
 
 const Home = () => (
-  <main className="flex-grow w-full font-sans">
+  <main className="flex-grow w-full font-sans relative z-10">
     <Hero />
     <Clients />
     <InfrastructureScroll />
-    <Services />
-    <Safety />
+    
+    {/* Enhanced Spacing Wrapper for Services & Safety - Gap removed for better blend */}
+    <div className="flex flex-col gap-0">
+      <Services />
+      <Safety />
+    </div>
+
+    {/* Leadership separated to reduce gap */}
     <Leadership />
   </main>
 );
 
 const AboutPage = () => (
-  <main className="flex-grow w-full font-sans">
+  <main className="flex-grow w-full font-sans relative z-10">
     <About />
   </main>
 );
 
 const ServicesPage = () => (
-  <main className="flex-grow pt-20 w-full font-sans">
+  <main className="flex-grow pt-20 w-full font-sans relative z-10">
     <Services />
   </main>
 );
 
 const SafetyPage = () => (
-  <main className="flex-grow pt-20 w-full font-sans">
+  <main className="flex-grow pt-20 w-full font-sans relative z-10">
     <Safety />
   </main>
 );
 
 const Contact = () => (
-  <main className="flex-grow pt-20 w-full bg-industrial-bg font-sans">
+  <main className="flex-grow pt-20 w-full font-sans relative z-10">
      <div className="bg-slate-900 text-white pt-24 pb-32 md:pb-48 border-b border-slate-800 relative overflow-hidden">
        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 pointer-events-none" />
        
@@ -194,7 +201,7 @@ const Contact = () => (
       <Clients />
     </div>
 
-    <div id="enquiry-form" className="bg-slate-50 border-t border-industrial-border pb-24 pt-16">
+    <div id="enquiry-form" className="bg-slate-50/50 border-t border-industrial-border pb-24 pt-16">
        <div className="container mx-auto px-4 md:px-6">
           <ServiceRequirementForm />
        </div>
@@ -259,7 +266,8 @@ function App() {
       </AnimatePresence>
 
       {!isLoading && (
-        <div className="bg-industrial-bg min-h-screen flex flex-col font-sans w-full relative">
+        <div className="min-h-screen flex flex-col font-sans w-full relative">
+          <AnimatedBackground />
           <ScrollProgress />
           <BackToTop />
           <Navbar />

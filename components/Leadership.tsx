@@ -3,7 +3,7 @@ import { SectionHeading } from './ui/SectionHeading';
 
 const Leadership: React.FC = () => {
   return (
-    <section className="py-24 bg-industrial-bg">
+    <section className="py-24 md:py-32 bg-industrial-bg">
       <div className="container mx-auto px-6 md:px-12">
         <div className="max-w-4xl mx-auto text-center">
           <SectionHeading subtitle="Leadership" title="Headed by Expertise" align="center" />

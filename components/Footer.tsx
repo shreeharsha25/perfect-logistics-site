@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowUpRight, Phone, Mail, MapPin, Globe, Shield, Terminal, BookOpen } from 'lucide-react';
 import { Logo } from './ui/Logo';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -40,11 +41,22 @@ const Footer: React.FC = () => {
               <span className="absolute -bottom-2 left-0 w-8 h-[2px] bg-industrial-primary" />
             </h3>
             <ul className="space-y-4 text-slate-400 text-[13px] font-medium">
-              <li><Link to="/services" className="hover:text-industrial-primary transition-colors flex items-center gap-2 group"><ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" /> Tank Cleaning (UG/AG)</Link></li>
-              <li><Link to="/services" className="hover:text-industrial-primary transition-colors flex items-center gap-2 group"><ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" /> Pipeline Engineering</Link></li>
-              <li><Link to="/services" className="hover:text-industrial-primary transition-colors flex items-center gap-2 group"><ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" /> Calibration Services</Link></li>
-              <li><Link to="/services" className="hover:text-industrial-primary transition-colors flex items-center gap-2 group"><ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" /> O&M For OMCs</Link></li>
-              <li><Link to="/services" className="hover:text-industrial-primary transition-colors flex items-center gap-2 group"><ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" /> PESO Compliance</Link></li>
+              {[
+                "Tank Cleaning (UG/AG)",
+                "Pipeline Engineering",
+                "Calibration Services",
+                "O&M For OMCs",
+                "PESO Compliance"
+              ].map((item, i) => (
+                <li key={i}>
+                  <Link to="/services" className="hover:text-industrial-primary transition-colors flex items-center gap-2 group">
+                    <motion.span initial={{ x: 0 }} whileHover={{ x: 5 }}>
+                      <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0 inline mr-2" />
+                      {item}
+                    </motion.span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -55,15 +67,15 @@ const Footer: React.FC = () => {
               <span className="absolute -bottom-2 left-0 w-8 h-[2px] bg-industrial-accent" />
             </h3>
             <div className="space-y-6">
-              <div className="group">
+              <div className="group cursor-default">
                 <h4 className="text-slate-200 text-sm font-bold mb-1 group-hover:text-industrial-accent transition-colors">Global Hub</h4>
                 <p className="text-slate-500 text-xs">Singapore (South East Asia Coordination)</p>
               </div>
-              <div className="group">
+              <div className="group cursor-default">
                 <h4 className="text-slate-200 text-sm font-bold mb-1 group-hover:text-industrial-accent transition-colors">National HQ</h4>
                 <p className="text-slate-500 text-xs">Mangalore, Karnataka</p>
               </div>
-              <div className="group">
+              <div className="group cursor-default">
                 <h4 className="text-slate-200 text-sm font-bold mb-1 group-hover:text-industrial-accent transition-colors">Regional Hubs</h4>
                 <p className="text-slate-500 text-xs">Chennai, Bangalore, Noida, Kochi</p>
               </div>
@@ -77,8 +89,8 @@ const Footer: React.FC = () => {
               <span className="absolute -bottom-2 left-0 w-8 h-[2px] bg-white" />
             </h3>
             <ul className="space-y-5">
-              <li className="flex gap-4">
-                <div className="w-10 h-10 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center text-industrial-primary flex-shrink-0">
+              <li className="flex gap-4 group">
+                <div className="w-10 h-10 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center text-industrial-primary flex-shrink-0 group-hover:bg-industrial-primary group-hover:text-white transition-colors">
                   <Mail size={18} />
                 </div>
                 <div>
@@ -86,8 +98,8 @@ const Footer: React.FC = () => {
                   <a href="mailto:info@perfectlogistics.in" className="text-sm font-medium hover:text-industrial-primary transition-colors">info@perfectlogistics.in</a>
                 </div>
               </li>
-              <li className="flex gap-4">
-                <div className="w-10 h-10 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center text-industrial-accent flex-shrink-0">
+              <li className="flex gap-4 group">
+                <div className="w-10 h-10 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center text-industrial-accent flex-shrink-0 group-hover:bg-industrial-accent group-hover:text-white transition-colors">
                   <Phone size={18} />
                 </div>
                 <div>
@@ -97,9 +109,11 @@ const Footer: React.FC = () => {
               </li>
             </ul>
             <div className="mt-8">
-               <Link to="/contact" className="inline-flex items-center gap-3 px-6 py-3 bg-industrial-primary hover:bg-green-600 transition-all text-xs font-bold uppercase tracking-widest rounded-sm shadow-lg shadow-green-900/20">
-                 Request Technical Brief
-               </Link>
+               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                 <Link to="/contact" className="inline-flex items-center gap-3 px-6 py-3 bg-industrial-primary hover:bg-green-600 transition-all text-xs font-bold uppercase tracking-widest rounded-sm shadow-lg shadow-green-900/20">
+                   Request Technical Brief
+                 </Link>
+               </motion.div>
             </div>
           </div>
         </div>

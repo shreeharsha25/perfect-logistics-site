@@ -46,7 +46,7 @@ const About: React.FC = () => {
   ];
 
   return (
-    <section ref={containerRef} className="bg-industrial-bg min-h-screen pt-24 md:pt-32 pb-16 md:pb-24 font-sans overflow-hidden">
+    <section ref={containerRef} className="min-h-screen pt-24 md:pt-32 pb-16 md:pb-24 font-sans overflow-hidden">
       <div className="container mx-auto px-4 md:px-12">
         
         {/* --- Hero Section --- */}
