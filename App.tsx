@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Lenis from 'lenis';
@@ -216,6 +216,7 @@ const ScrollManager = () => {
     window.scrollTo(0, 0);
     setTimeout(() => {
       ScrollTrigger.refresh();
+      window.dispatchEvent(new Event('resize')); // Force Lenis to see new page height
     }, 100);
   }, [pathname]);
   return null;
@@ -223,35 +224,46 @@ const ScrollManager = () => {
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
     // Optimized for Trackpad Responsiveness
     const lenis = new Lenis({
-      lerp: 0.1,
+      lerp: 0.08,
+      duration: 1.2,
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 2,
-      infinite: false
+      touchMultiplier: 1.5,
+      infinite: false,
     });
+    
+    lenisRef.current = lenis;
 
-    const tickerUpdate = (time: number) => {
-      lenis.raf(time * 1000);
+    const raf = (time: number) => {
+      lenis.raf(time);
     };
 
-    lenis.on('scroll', () => ScrollTrigger.update());
-    gsap.ticker.add(tickerUpdate);
+    gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
+    lenis.on('scroll', ScrollTrigger.update);
+
     return () => {
-      gsap.ticker.remove(tickerUpdate);
+      gsap.ticker.remove(raf);
       lenis.destroy();
     };
   }, []);
 
   useEffect(() => {
     if (!isLoading) {
+      // CRITICAL: Force update whenever the content actually renders
+      // The delay ensures DOM painting is complete
       setTimeout(() => {
         ScrollTrigger.refresh();
+        if (lenisRef.current) {
+           lenisRef.current.resize();
+        }
+        window.dispatchEvent(new Event('resize')); 
       }, 500);
     }
   }, [isLoading]);

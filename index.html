@@ -38,6 +38,7 @@
     <style>
       html {
         height: auto;
+        overscroll-behavior: auto; /* Changed from none to auto to fix trackpad scrolling */
       }
       
       html.lenis, html.lenis body {
@@ -67,6 +68,9 @@
         background-color: #f8fafc;
         color: #0f172a;
         min-height: 100vh;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       
       ::-webkit-scrollbar {
@@ -109,5 +113,6 @@
 </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
   </body>
 </html>
