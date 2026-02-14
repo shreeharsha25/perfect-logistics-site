@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/ui/Navbar';
@@ -214,57 +213,34 @@ const ScrollManager = () => {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Refresh ScrollTrigger after a slight delay to allow layout to settle
     setTimeout(() => {
       ScrollTrigger.refresh();
-      window.dispatchEvent(new Event('resize')); // Force Lenis to see new page height
-    }, 100);
+      window.dispatchEvent(new Event('resize')); 
+    }, 200);
   }, [pathname]);
   return null;
 }
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const lenisRef = useRef<Lenis | null>(null);
-
-  useEffect(() => {
-    // Optimized for Trackpad Responsiveness
-    const lenis = new Lenis({
-      lerp: 0.08,
-      duration: 1.2,
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5,
-      infinite: false,
-    });
-    
-    lenisRef.current = lenis;
-
-    const raf = (time: number) => {
-      lenis.raf(time);
-    };
-
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
-
-    lenis.on('scroll', ScrollTrigger.update);
-
-    return () => {
-      gsap.ticker.remove(raf);
-      lenis.destroy();
-    };
-  }, []);
 
   useEffect(() => {
     if (!isLoading) {
-      // CRITICAL: Force update whenever the content actually renders
-      // The delay ensures DOM painting is complete
-      setTimeout(() => {
+      // Ensure ScrollTrigger sees the correct DOM height after loading
+      const refresh = () => {
         ScrollTrigger.refresh();
-        if (lenisRef.current) {
-           lenisRef.current.resize();
-        }
-        window.dispatchEvent(new Event('resize')); 
-      }, 500);
+      };
+
+      // Refresh schedule
+      refresh();
+      const t1 = setTimeout(refresh, 100);
+      const t2 = setTimeout(refresh, 500);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
     }
   }, [isLoading]);
 
