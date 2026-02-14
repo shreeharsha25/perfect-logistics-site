@@ -23,6 +23,7 @@ import { AnimatedBackground } from './components/ui/AnimatedBackground';
 import { motion } from 'framer-motion';
 import { Building2, Phone, Mail, Globe, MapPin } from 'lucide-react';
 import { SectionHeading } from './components/ui/SectionHeading';
+import ScrollToTop from './components/ScrollToTop';
 
 // Register ScrollTrigger globally
 gsap.registerPlugin(ScrollTrigger);
@@ -246,6 +247,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop/>
       <ScrollManager />
       <AnimatePresence mode="wait">
         {isLoading && (

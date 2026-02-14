@@ -31,7 +31,7 @@ const InfrastructureScroll: React.FC = () => {
         scrollTrigger: {
           trigger: triggerRef.current,
           start: "top top",
-          end: "+=2200",
+          end: "+=100%",
           scrub: 1.5,
           pin: true,
           anticipatePin: 1.5,
