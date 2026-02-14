@@ -9,42 +9,47 @@ interface Client {
 
 const CLIENTS: Client[] = [
   // Oil & Gas PSUs
-  { name: "Hindustan Petroleum", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/7/78/Hindustan_Petroleum_Logo.svg/300px-Hindustan_Petroleum_Logo.svg.png", width: 80 },
-  { name: "Indian Oil", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/69/Indian_Oil_Corporation_Logo.svg/300px-Indian_Oil_Corporation_Logo.svg.png", width: 80 },
-  { name: "ONGC", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/Oil_and_Natural_Gas_Corporation_logo.svg/300px-Oil_and_Natural_Gas_Corporation_logo.svg.png", width: 80 },
-  { name: "Bharat Petroleum", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Bharat_Petroleum_Logo.svg/300px-Bharat_Petroleum_Logo.svg.png", width: 80 },
-  { name: "GAIL", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/5/52/GAIL_Logo.svg/300px-GAIL_Logo.svg.png", width: 70 },
-  { name: "MRPL", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Mangalore_Refinery_and_Petrochemicals_Limited_Logo.svg/300px-Mangalore_Refinery_and_Petrochemicals_Limited_Logo.svg.png", width: 90 },
+
+  { name: "Indian Oil Petronas Private Limited", logo: "./indianoil.png", width: 80 },
+  { name: "BPCL", logo: "./Bharat_Petroleum_logo.svg", width: 80 },
+  { name: "HCL technology ltd", logo: "./HCLtech.png", width: 80 },
   
   // Private Energy & Infrastructure
-  { name: "Reliance Industries", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/9/99/Reliance_Industries_Logo.svg/300px-Reliance_Industries_Logo.svg.png", width: 100 },
-  { name: "Nayara Energy", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Nayara_Energy_logo.svg/300px-Nayara_Energy_logo.svg.png", width: 110 },
-  { name: "Shell", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/e/e8/Shell_logo.svg/300px-Shell_logo.svg.png", width: 70 },
-  { name: "TotalEnergies", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/9/9e/TotalEnergies_logo.svg/300px-TotalEnergies_logo.svg.png", width: 90 },
-  { name: "Suzlon", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/6/66/Suzlon_Energy_Logo.svg/300px-Suzlon_Energy_Logo.svg.png", width: 100 },
-  { name: "Tatsuno", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Tatsuno_Corporation_logo.svg/320px-Tatsuno_Corporation_logo.svg.png", width: 110 },
-  { name: "Lanco", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/26/Lanco_Infratech_Logo.jpg/320px-Lanco_Infratech_Logo.jpg", width: 90 },
+  
+
+  { name: "Shell", logo: "./Shell.png", width: 70 },
+  { name: "TotalGas", logo: "./totalgas.png", width: 90 },
+  { name: "Suzlon", logo: "./suzlon.png", width: 100 },
+  { name: "Tatsuno", logo: "./tatsuno.png", width: 110 },
+  { name: "Lanco", logo: "./lanco.png", width: 90 },
+  { name: "Bharathi Airtel", logo: "./airtel.png", width: 90 },
   
   // Engineering & Construction
-  { name: "L&T Technology Services", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/L%26T_Technology_Services_logo.svg/300px-L%26T_Technology_Services_logo.svg.png", width: 120 },
-  { name: "Tata Projects", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Tata_logo.svg/300px-Tata_logo.svg.png", width: 90 },
-  { name: "DLF", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/DLF_logo.svg/300px-DLF_logo.svg.png", width: 80 },
+ 
+
+  { name: "DLF", logo: "./DLF.png", width: 80 },
   
   // Tech & Corporate
-  { name: "TCS", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tata_Consultancy_Services_Logo.svg/300px-Tata_Consultancy_Services_Logo.svg.png", width: 120 },
-  { name: "HCLTech", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/HCL_Tech_logo_2022.svg/300px-HCL_Tech_logo_2022.svg.png", width: 100 },
+  { name: "TCS", logo: "./tsc.png", width: 120 },
+  { name: "HCLTech", logo: "./HCLtech.png", width: 100 },
   { name: "Cisco", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Cisco_logo_blue_2016.svg/300px-Cisco_logo_blue_2016.svg.png", width: 80 },
+  { name: "ETA Techno park ", logo: "", width: 80 },
+  { name: "CTS India ", logo: "./cts.png", width: 80 },
   
   // Logistics
-  { name: "Blue Dart", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Blue_Dart_logo.svg/300px-Blue_Dart_logo.svg.png", width: 100 },
-  { name: "DB Schenker", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/DB_Schenker_Logo.svg/300px-DB_Schenker_Logo.svg.png", width: 110 },
+  { name: "DB Schenker", logo: "./DB_Schenker_logo.svg", width: 110 },
   { name: "Ford", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Ford_logo_flat.svg/300px-Ford_logo_flat.svg.png", width: 100 },
+  { name: "Geena & co", logo: "./jeena.png", width: 100 },
+  { name: "Fly Jac Logistics", logo: "./flyjac.png", width: 100 },
+  { name: "CCCL ltd", logo: "./cccl.png", width: 100 },
+  { name: "Primeware Logistics ltd", logo: "", width: 100 },
+  { name: "Udipi power projects ltd", logo: "", width: 100 },
 ];
 
 const MARQUEE_CLIENTS = [...CLIENTS, ...CLIENTS];
 
 const ClientLogo = ({ client }: { client: Client }) => {
-  const [imgError, setImgError] = useState(false);
+  const [imgError, setImgError] = useState(!client.logo);
 
   if (imgError) {
     return (

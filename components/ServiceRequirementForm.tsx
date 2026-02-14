@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Building2, User, Wrench, MapPin, X, CheckCircle2, 
-  AlertCircle, Loader2, ClipboardCheck, Phone, Calendar, ShieldCheck
+  AlertCircle, Loader2, ClipboardCheck, Calendar
 } from 'lucide-react';
 
 // --- Constants ---
@@ -63,6 +63,28 @@ interface FormErrors {
   [key: string]: string;
 }
 
+// InputWrapper component - defined outside to prevent re-renders
+interface InputWrapperProps {
+  label: string;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}
+
+const InputWrapper: React.FC<InputWrapperProps> = ({ label, error, required = false, children }) => (
+  <div className="flex flex-col gap-2">
+    <label className="text-[11px] font-black text-industrial-muted uppercase tracking-widest flex justify-between">
+      <span>{label} {required && <span className="text-industrial-primary">*</span>}</span>
+    </label>
+    {children}
+    {error && (
+      <span className="text-[10px] text-red-500 flex items-center gap-1 font-bold">
+        <AlertCircle size={10} /> {error}
+      </span>
+    )}
+  </div>
+);
+
 const ServiceRequirementForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
@@ -83,13 +105,20 @@ const ServiceRequirementForm: React.FC = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionData, setSubmissionData] = useState<{ id: string; timestamp: string } | null>(null);
+  const [submitError, setSubmitError] = useState<string>('');
   
   const today = new Date().toISOString().split('T')[0];
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleCheckboxChange = (service: string) => {
@@ -100,16 +129,32 @@ const ServiceRequirementForm: React.FC = () => {
         : [...current, service];
       return { ...prev, services: updated };
     });
-    if (errors.services) setErrors(prev => ({ ...prev, services: '' }));
+    if (errors.services) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.services;
+        return newErrors;
+      });
+    }
   };
 
   const handleStateSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value;
     if (selected && !formData.states.includes(selected)) {
       setFormData(prev => ({ ...prev, states: [...prev.states, selected] }));
-      if (errors.states) setErrors(prev => ({ ...prev, states: '' }));
+      if (errors.states) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors.states;
+          return newErrors;
+        });
+      }
     }
     e.target.value = "";
+  };
+
+  const removeState = (stateToRemove: string) => {
+    setFormData(prev => ({ ...prev, states: prev.states.filter(s => s !== stateToRemove) }));
   };
 
   const validate = (): boolean => {
@@ -139,31 +184,33 @@ const ServiceRequirementForm: React.FC = () => {
     if (!validate()) return;
 
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const referenceId = `PL-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-    const timestamp = new Date().toLocaleString();
-    
-    setSubmissionData({ id: referenceId, timestamp });
-    setIsSubmitting(false);
-  };
+    setSubmitError('');
 
-  const InputWrapper = ({ label, error, required = false, children }: any) => (
-    <div className="flex flex-col gap-2">
-      <label className="text-[11px] font-black text-industrial-muted uppercase tracking-widest flex justify-between">
-        <span>{label} {required && <span className="text-industrial-primary">*</span>}</span>
-      </label>
-      {children}
-      {error && <span className="text-[10px] text-red-500 flex items-center gap-1 font-bold"><AlertCircle size={10} /> {error}</span>}
-    </div>
-  );
+    try {
+      const response = await fetch('http://localhost:5000/send-mail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-  const MotionInput = motion.input;
-  const MotionSelect = motion.select;
+      const result = await response.json();
 
-  const inputAnimation = {
-    whileFocus: { scale: 1.005, backgroundColor: "#ffffff", borderColor: "#00A651", boxShadow: "0 4px 15px rgba(0, 166, 81, 0.1)" },
-    transition: { duration: 0.2 }
+      if (result.success) {
+        const referenceId = `PL-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+        const timestamp = new Date().toLocaleString();
+        
+        setSubmissionData({ id: referenceId, timestamp });
+      } else {
+        setSubmitError('Failed to submit form. Please try again.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setSubmitError('Network error. Please check if the server is running on port 5000.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submissionData) {
@@ -221,6 +268,13 @@ const ServiceRequirementForm: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-12">
+          {submitError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded flex items-center gap-2">
+              <AlertCircle size={18} />
+              <span className="text-sm">{submitError}</span>
+            </div>
+          )}
+
           {/* Section: Identity */}
           <div className="space-y-6">
             <div className="flex items-center gap-3 mb-2">
@@ -229,16 +283,34 @@ const ServiceRequirementForm: React.FC = () => {
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <InputWrapper label="Company Name" required error={errors.companyName}>
-                <MotionInput {...inputAnimation} type="text" name="companyName" value={formData.companyName} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded focus:border-industrial-primary outline-none" />
+                <input 
+                  type="text" 
+                  name="companyName" 
+                  value={formData.companyName} 
+                  onChange={handleChange}
+                  className="px-4 py-3 bg-slate-50 border border-slate-200 rounded focus:border-industrial-primary focus:bg-white outline-none transition-all" 
+                />
               </InputWrapper>
               <InputWrapper label="Org Type" required error={errors.orgType}>
-                <MotionSelect {...inputAnimation} name="orgType" value={formData.orgType} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded outline-none">
+                <select 
+                  name="orgType" 
+                  value={formData.orgType} 
+                  onChange={handleChange}
+                  className="px-4 py-3 bg-slate-50 border border-slate-200 rounded focus:border-industrial-primary focus:bg-white outline-none transition-all"
+                >
                   <option value="">Select Category</option>
                   {ORGANIZATION_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                </MotionSelect>
+                </select>
               </InputWrapper>
               <InputWrapper label="GSTIN" error={errors.gstNumber}>
-                <MotionInput {...inputAnimation} type="text" name="gstNumber" value={formData.gstNumber} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded uppercase" maxLength={15} />
+                <input 
+                  type="text" 
+                  name="gstNumber" 
+                  value={formData.gstNumber} 
+                  onChange={handleChange}
+                  className="px-4 py-3 bg-slate-50 border border-slate-200 rounded uppercase focus:border-industrial-primary focus:bg-white outline-none transition-all" 
+                  maxLength={15}
+                />
               </InputWrapper>
             </div>
           </div>
@@ -251,18 +323,42 @@ const ServiceRequirementForm: React.FC = () => {
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <InputWrapper label="Full Name" required error={errors.contactName}>
-                <MotionInput {...inputAnimation} type="text" name="contactName" value={formData.contactName} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
+                <input 
+                  type="text" 
+                  name="contactName" 
+                  value={formData.contactName} 
+                  onChange={handleChange}
+                  className="px-4 py-3 bg-slate-50 border border-slate-200 rounded focus:border-industrial-primary focus:bg-white outline-none transition-all" 
+                />
               </InputWrapper>
               <InputWrapper label="Designation">
-                <MotionInput {...inputAnimation} type="text" name="designation" value={formData.designation} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
+                <input 
+                  type="text" 
+                  name="designation" 
+                  value={formData.designation} 
+                  onChange={handleChange}
+                  className="px-4 py-3 bg-slate-50 border border-slate-200 rounded focus:border-industrial-primary focus:bg-white outline-none transition-all" 
+                />
               </InputWrapper>
               <InputWrapper label="Official Email" required error={errors.email}>
-                <MotionInput {...inputAnimation} type="email" name="email" value={formData.email} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded" />
+                <input 
+                  type="email" 
+                  name="email" 
+                  value={formData.email} 
+                  onChange={handleChange}
+                  className="px-4 py-3 bg-slate-50 border border-slate-200 rounded focus:border-industrial-primary focus:bg-white outline-none transition-all" 
+                />
               </InputWrapper>
               <InputWrapper label="Mobile Number" required error={errors.mobile}>
                 <div className="flex">
                   <span className="px-3 py-3 bg-slate-200 border border-r-0 border-slate-200 rounded-l text-xs font-bold flex items-center justify-center">+91</span>
-                  <MotionInput {...inputAnimation} type="tel" name="mobile" value={formData.mobile} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-r flex-grow" />
+                  <input 
+                    type="tel" 
+                    name="mobile" 
+                    value={formData.mobile} 
+                    onChange={handleChange}
+                    className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-r flex-grow focus:border-industrial-primary focus:bg-white outline-none transition-all" 
+                  />
                 </div>
               </InputWrapper>
             </div>
@@ -284,7 +380,12 @@ const ServiceRequirementForm: React.FC = () => {
                   <div className={`w-4 h-4 border rounded flex items-center justify-center transition-colors ${formData.services.includes(service) ? 'bg-industrial-primary border-industrial-primary' : 'border-slate-300'}`}>
                     {formData.services.includes(service) && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                   </div>
-                  <input type="checkbox" className="hidden" checked={formData.services.includes(service)} onChange={() => handleCheckboxChange(service)} />
+                  <input 
+                    type="checkbox" 
+                    className="hidden" 
+                    checked={formData.services.includes(service)} 
+                    onChange={() => handleCheckboxChange(service)} 
+                  />
                   <span className="text-xs font-medium text-industrial-text group-hover:text-industrial-primary">{service}</span>
                 </motion.label>
               ))}
@@ -301,20 +402,33 @@ const ServiceRequirementForm: React.FC = () => {
                   <h3 className="font-bold text-industrial-text uppercase tracking-widest text-sm">Logistics</h3>
                 </div>
                 <InputWrapper label="Operational States" required error={errors.states}>
-                  <MotionSelect {...inputAnimation} onChange={handleStateSelect} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full">
+                  <select 
+                    onChange={handleStateSelect} 
+                    className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full focus:border-industrial-primary focus:bg-white outline-none transition-all"
+                  >
                     <option value="">+ Add State</option>
                     {INDIAN_STATES.map(s => <option key={s} value={s} disabled={formData.states.includes(s)}>{s}</option>)}
-                  </MotionSelect>
+                  </select>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {formData.states.map(s => (
                       <span key={s} className="px-2 py-1 bg-industrial-primary/10 text-industrial-primary text-[10px] font-bold uppercase rounded flex items-center gap-1 border border-industrial-primary/20">
-                        {s} <button onClick={() => setFormData(p => ({ ...p, states: p.states.filter(x => x !== s) }))}><X size={10}/></button>
+                        {s} 
+                        <button type="button" onClick={() => removeState(s)}>
+                          <X size={10}/>
+                        </button>
                       </span>
                     ))}
                   </div>
                 </InputWrapper>
                 <InputWrapper label="Site Specific Locations">
-                  <MotionInput {...inputAnimation} type="text" name="locations" value={formData.locations} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full" placeholder="e.g. refineries, pump networks" />
+                  <input 
+                    type="text" 
+                    name="locations" 
+                    value={formData.locations} 
+                    onChange={handleChange}
+                    className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full focus:border-industrial-primary focus:bg-white outline-none transition-all" 
+                    placeholder="e.g. refineries, pump networks" 
+                  />
                 </InputWrapper>
               </div>
 
@@ -324,14 +438,26 @@ const ServiceRequirementForm: React.FC = () => {
                   <h3 className="font-bold text-industrial-text uppercase tracking-widest text-sm">Timeline & Training</h3>
                 </div>
                 <InputWrapper label="Est. Project Start Date">
-                  <MotionInput {...inputAnimation} type="date" name="startDate" value={formData.startDate} onChange={handleChange} min={today} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full" />
+                  <input 
+                    type="date" 
+                    name="startDate" 
+                    value={formData.startDate} 
+                    onChange={handleChange}
+                    min={today} 
+                    className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full focus:border-industrial-primary focus:bg-white outline-none transition-all" 
+                  />
                 </InputWrapper>
                 <InputWrapper label="HSSE Site Training Required?">
-                  <MotionSelect {...inputAnimation} name="hsseRequired" value={formData.hsseRequired} onChange={handleChange} className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full">
+                  <select 
+                    name="hsseRequired" 
+                    value={formData.hsseRequired} 
+                    onChange={handleChange}
+                    className="px-4 py-3 bg-slate-50 border border-slate-200 rounded w-full focus:border-industrial-primary focus:bg-white outline-none transition-all"
+                  >
                     <option value="">Select Option</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
-                  </MotionSelect>
+                  </select>
                 </InputWrapper>
               </div>
             </div>
@@ -343,7 +469,12 @@ const ServiceRequirementForm: React.FC = () => {
                 <div className={`mt-1 w-5 h-5 border rounded flex items-center justify-center transition-all ${formData.consent ? 'bg-industrial-primary border-industrial-primary' : 'border-slate-300'}`}>
                   {formData.consent && <CheckCircle2 size={12} className="text-white" />}
                 </div>
-                <input type="checkbox" className="hidden" checked={formData.consent} onChange={() => setFormData(p => ({ ...p, consent: !p.consent }))} />
+                <input 
+                  type="checkbox" 
+                  className="hidden" 
+                  checked={formData.consent} 
+                  onChange={() => setFormData(p => ({ ...p, consent: !p.consent }))} 
+                />
                 <span className={`text-[11px] leading-relaxed ${errors.consent ? 'text-red-500' : 'text-industrial-muted'}`}>
                   I confirm that the technical requirements provided are accurate and authorize Perfect Logistics to use this data for feasibility analysis.
                 </span>
@@ -355,7 +486,7 @@ const ServiceRequirementForm: React.FC = () => {
             whileTap={{ scale: 0.98 }}
             type="submit" 
             disabled={isSubmitting}
-            className="w-full py-5 bg-industrial-text text-white font-bold uppercase tracking-widest hover:bg-industrial-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50 relative overflow-hidden group"
+            className="w-full py-5 bg-industrial-text text-white font-bold uppercase tracking-widest hover:bg-industrial-primary transition-all flex items-center justify-center gap-3 disabled:opacity-50 relative overflow-hidden group rounded"
           >
             <span className="relative z-10 flex items-center gap-3">
               {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <ClipboardCheck size={18} />}
